@@ -23,8 +23,9 @@ class Hero {
   }
 
   die() {
-    this.skin = '💀';
-    console.log('YOU ARE DEAD!💀');
+    player.play('src/sounds/game-over.wav');
+    this.skin = '👼';
+    console.log('RIP 👼 :(');
     process.exit();
   }
 }
