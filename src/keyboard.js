@@ -1,35 +1,24 @@
 // Умеешь работать с keypress? Попробуй разобраться в этом файле.
 // Вместо keypress можно использовать и стандартный readline.
 // Главное не используй всё вместе!
-const player = require('play-sound')((opts = {}));
+
 const keypress = require('keypress');
-// const { rawListeners } = require('process');
-// const Hero = require('./game-models/Hero');
-// const Boomerang = require('./game-models/Boomerang');
 
 // Управление.
 // Настроим соответствия нажатий на клавиши и действий в игре.
 
-// const keyboard = {
-//   q: () => console.log('q'),
-//   w: () => console.log('w'),
-//   e: () => console.log('e'),
-//   r: () => console.log('r'),
-//   t: () => console.log('t'),
-//   y: () => console.log('y'),
-// };
+const keyboard = {
+  q: () => console.log('q'),
+  w: () => console.log('w'),
+  e: () => console.log('e'),
+  r: () => console.log('r'),
+  t: () => console.log('t'),
+  y: () => console.log('y'),
+};
 
 // Какая-то функция.
 
-function runInteractiveConsole(hero, boomerang) {
-  const keyboard = {
-    a: () => hero.moveLeft(),
-    d: () => hero.moveRight(),
-    space: () => {
-      boomerang.position = hero.position + 3;
-      player.play('src/sounds/boomerang-brosok.wav');
-    },
-  };
+function runInteractiveConsole() {
   keypress(process.stdin);
   process.stdin.on('keypress', (ch, key) => {
     if (key) {
@@ -48,5 +37,4 @@ function runInteractiveConsole(hero, boomerang) {
 
 // Давай попробуем запустить этот скрипт!
 
-// runInteractiveConsole();
-module.exports = runInteractiveConsole;
+runInteractiveConsole();
