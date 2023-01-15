@@ -1,8 +1,10 @@
 // Наш герой.
 
+const Enemy = require("./Enemy");
+
 class Hero {
   constructor({ position }) {
-    this.skin = '🤠'; // можете использовать любые emoji '💃'
+    this.skin = "🦔"; // можете использовать любые emoji '💃'
     this.position = position;
   }
 
@@ -18,12 +20,15 @@ class Hero {
 
   attack() {
     // Атакуем.
-    this.boomerang.fly();
+    if (!this.boomerang.position) {
+      this.boomerang.position = this.position + 1;
+    }
+    // this.boomerang.fly();
   }
 
   die() {
-    this.skin = '💀';
-    console.log('YOU ARE DEAD!💀');
+    this.skin = "💀";
+    console.log("YOU ARE DEAD!💀");
     process.exit();
   }
 }
