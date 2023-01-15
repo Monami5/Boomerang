@@ -1,10 +1,7 @@
 // Наш герой.
 const player = require('play-sound')((opts = {}));
 
-const Enemy = require("./Enemy");
-
 class Hero {
-
   constructor({ position = 0 }) {
     this.skin = '🦔'; // можете использовать любые emoji '💃'
     this.position = position;
@@ -25,14 +22,12 @@ class Hero {
     if (!this.boomerang.position) {
       this.boomerang.position = this.position + 1;
     }
-    // this.boomerang.fly();
-  }
-
     player.play('src/sounds/game-over.wav');
     this.skin = '👼';
     console.log('RIP 👼 :(');
 
     process.exit();
+    // this.boomerang.fly();
   }
 }
 
