@@ -4,20 +4,19 @@
 
 class Boomerang {
   constructor() {
-    this.skin = "🍄";
-    this.pathOfTheMush = "goright";
+    this.skin = '🍄';
+    this.pathOfTheMush = 'goright';
     this.position = undefined;
   }
 
   fly() {
-    if ((this.pathOfTheMush = "goright")) {
+    if ((this.pathOfTheMush = 'goright')) {
       this.moveRight();
     } else {
-      this.moveLeft;
+      this.moveLeft();
     }
     // this.moveRight();
     // this.moveLeft();
-
   }
 
   moveLeft() {
