@@ -15,7 +15,6 @@ module.exports = (sequelize, DataTypes) => {
     {
       user_name: {
         type: DataTypes.TEXT,
-        unique: true,
         allowNull: false,
       },
       score: DataTypes.INTEGER,
