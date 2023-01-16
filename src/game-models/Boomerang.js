@@ -1,6 +1,6 @@
 class Boomerang {
   constructor() {
-    this.skin = '🌀';
+    this.skin = '🍄';
     this.position = undefined;
     this.direction = 'right';
   }
