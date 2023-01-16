@@ -1,9 +1,9 @@
 // Враг.
 
 class Enemy {
-  constructor(road) {
+  constructor(trackLength) {
     this.skins = this.generateSkin();
-    this.position = road - 1;
+    this.position = trackLength - 1;
   }
 
   generateSkin() {
@@ -16,10 +16,10 @@ class Enemy {
     this.position -= 1;
   }
 
-  die() {
-    this.skins = '💀';
+  dieEnemy() {
     this.position = '?';
     console.log('Enemy is dead!');
+    this.skins = '💀';
   }
 }
 
