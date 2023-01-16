@@ -3,14 +3,28 @@
 // Главное не используй всё вместе!
 
 const keypress = require('keypress');
+// const { rawListeners } = require('process');
+// const Hero = require('./game-models/Hero');
+// const Boomerang = require('./game-models/Boomerang');
+
+// Управление.
+// Настроим соответствия нажатий на клавиши и действий в игре.
+
+// Какая-то функция.
 
 // Управление.
 // Настроим соответствия нажатий на клавиши и действий в игре.
 
 const keyboard = {
-  q: () => console.log('q'),
-  w: () => console.log('w'),
-  e: () => console.log('e'),
+  q: (hero) => hero.moveLeft(),
+  w: (hero) => hero.moveRight(),
+  e: (hero) => hero.attack(),
+  // {
+  //   if (hero.boomerang.position === undefined) {
+  //     hero.attack();
+  //   }
+  // },
+
   r: () => console.log('r'),
   t: () => console.log('t'),
   y: () => console.log('y'),
@@ -18,13 +32,13 @@ const keyboard = {
 
 // Какая-то функция.
 
-function runInteractiveConsole() {
+function runInteractiveConsole(hero) {
   keypress(process.stdin);
   process.stdin.on('keypress', (ch, key) => {
     if (key) {
       // Вызывает команду, соответствующую нажатой кнопке.
       if (key.name in keyboard) {
-        keyboard[key.name]();
+        keyboard[key.name](hero);
       }
       // Прерывание программы.
       if (key.ctrl && key.name === 'c') {
@@ -37,4 +51,5 @@ function runInteractiveConsole() {
 
 // Давай попробуем запустить этот скрипт!
 
-runInteractiveConsole();
+// runInteractiveConsole();
+module.exports = runInteractiveConsole;
