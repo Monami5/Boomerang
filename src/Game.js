@@ -1,76 +1,69 @@
-// Импортируем всё необходимое.
-// Или можно не импортировать,
-// а передавать все нужные объекты прямо из run.js при инициализации new Game().
-
 const Hero = require("./game-models/Hero");
 const Enemy = require("./game-models/Enemy");
-const { User} = require(../db/models);
-const Boomerang = require('./game-models/Boomerang');
+const Boomerang = require("./game-models/Boomerang");
 const View = require("./View");
-const Keyboard = require("./keyboard");
-
-
-
-// Основной класс игры.
-// Тут будут все настройки, проверки, запуск.
+const runInteractiveConsole = require("./keyboard");
+const { UserScore } = require("../db/models");
 
 class Game {
   constructor({ trackLength, name }) {
     this.trackLength = trackLength;
-    this.hero = new Hero({ position: 0, boomerang: new Boomerang() }); // Герою можно аргументом передать бумеранг.
+    this.hero = new Hero({ position: 0, boomerang: new Boomerang() });
     this.enemy = new Enemy(this.trackLength);
-    this.view = new View();
-    this.name = name;
     this.track = [];
+    this.view = new View();
     this.regenerateTrack();
+    this.count = 0;
+    this.timer = 0;
+    this.name = name;
   }
 
   regenerateTrack() {
-    // Сборка всего необходимого (герой, враг(и), оружие)
-    // в единую структуру данных
     this.track = new Array(this.trackLength).fill(" ");
-    this.track[this.hero.boomerang.position] = this.hero.skin;
     this.track[this.enemy.position] = this.enemy.moveLeft();
     this.track[this.hero.boomerang.position] = this.hero.boomerang.skin;
-    this.
-    track[this.enemy.position] = this.enemy.skin;
+    this.track[this.hero.position] = this.hero.skin;
+    this.track[this.enemy.position] = this.enemy.skin;
   }
 
-  async begin() {
+  async givi() {
     try {
-      const user = await User.create({ nick: this.name, scores: this.enemies });
+      const user = await UserScore.create({
+        user_name: this.name,
+        score: this.count,
+      });
       console.clear();
     } catch (error) {
       console.log(error);
     }
   }
 
-  async gameResult() {
+  async addResult() {
     try {
-      const result = await User.findAll();
-      const filter = result.filter((el) => el.nick === this.name);
+      const result = await UserScore.findAll();
+      const filter = result.filter((el) => el.user_name === this.name);
       if (filter.length > 0) {
-        const scores = await User.findOne({
+        const scores = await UserScore.findOne({
           where: {
-            nick: this.name,
+            user_name: this.name,
           },
         });
-        scores.enemies = this.count;
+        scores.score = this.count;
         await scores.save();
         console.clear();
-        console.log('Nick: ', scores.nick);
-        console.log('scores: ', scores.enemies);
+        console.log("Nickname: ", scores.user_name);
+        console.log("scores: ", scores.score);
       } else {
-        await this.begin();
-        const final = await User.findOne({
+        await this.givi();
+        const finalResult = await UserScore.findOne({
           where: {
-            nick: this.name,
+            user_name: this.name,
           },
         });
         console.clear();
-        console.log('Nick: ', final.nick);
-        console.log('scores: ', final.scores);
-        console.log('try again!');
+        console.log("Nickname: ", finalResult.user_name);
+        console.log("scores: ", finalResult.score);
+        console.log("try again!");
       }
     } catch (error) {
       console.log(error);
@@ -83,45 +76,45 @@ class Game {
     }
     if (this.hero.boomerang.position <= this.hero.position) {
       this.hero.boomerang.position = undefined;
-      this.hero.boomerang.pathOfTheMush = 'goright';
+      this.hero.boomerang.direction = "right";
     }
-
     if (this.hero.position === this.enemy.position) {
-      this.hero.die();
+      this.hero.dieHero();
       console.clear();
-      await this.gameResult();
+      await this.addResult();
       process.exit();
     }
-
     if (this.hero.boomerang.position >= this.enemy.position) {
       this.enemy.dieEnemy();
       this.count += 1;
-      this.hero.boomerang.pathOfTheMush = 'goleft';
+      this.hero.boomerang.direction = "left";
       this.enemy = new Enemy(this.trackLength);
     }
     if (this.hero.boomerang.position === this.trackLength - 1) {
-      this.hero.boomerang.pathOfTheMush = 'goleft';
+      this.hero.boomerang.direction = "left";
     }
-    // if (this.count >= 5) {
-    //   this.hero.boomerang.skin = '🌪';
-    //   this.hero.skin = '🕺';
-    // }
-    // if (this.count >= 10) {
-    //   this.hero.skin = '💃';
-    //   this.hero.boomerang.skin = '💋';
-    // }
+    if (this.count >= 5) {
+      this.hero.boomerang.skin = "🥜";
+      this.hero.skin = "🦉";
+    }
+    if (this.count >= 10) {
+      this.hero.skin = "🐝";
+      this.hero.boomerang.skin = "🕸";
+    }
   }
 
-
   play() {
-    Keyboard(this.hero);
+    runInteractiveConsole(this.hero);
     setInterval(() => {
       // Let's play!
+      // this.hero.boomerang.fly();
+      this.timer += 0.1;
       this.check();
       this.regenerateTrack();
-      this.view.render(this.track, this.enemies, this.time);
+      this.view.render(this.track, this.count, this.timer);
     }, 100);
   }
 }
 
 module.exports = Game;
+
